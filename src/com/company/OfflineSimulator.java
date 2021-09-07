@@ -33,18 +33,18 @@ public class OfflineSimulator {
                         }
                     }
                 }
-                HashMap<String, Integer> hasReq = new HashMap<>();
-                for (String reqMaterial : material.requirements.keySet()) {
-                    float required = material.requirements.get(reqMaterial);
+                HashMap<String, Integer> hasAllRequiredMaterials = new HashMap<>();
+                for (String ingredient : material.ingredients.keySet()) {
+                    float required = material.ingredients.get(ingredient);
                     float owns = 0;
                     for (Material material1 : materials) {
-                        String key = reqMaterial.split("_")[0];
+                        String key = ingredient.split("_")[0];
                         if (material1.getName().split("_")[0].equals(key)) {
                             owns += Math.floor(material1.initialAmount);
                         }
                     }
                     int hasReqMat = H(owns - required);
-                    hasReq.put(reqMaterial, hasReqMat);
+                    hasAllRequiredMaterials.put(ingredient, hasReqMat);
                 }
                 int material_continue_work;
 
@@ -52,7 +52,7 @@ public class OfflineSimulator {
                 int material_already_started = 0;
 
                 // if has requirements, not an ore
-                if (material.requirements.size() > 0) {
+                if (material.ingredients.size() > 0) {
                     if (material.initialAmount % 1 > 0.0001 && material.initialAmount % 1 < 0.9999) {
                         material_already_started = 1;
                     }
@@ -64,8 +64,8 @@ public class OfflineSimulator {
                             material.shouldStart = 1;
                         }
                     }
-                    for (String req : material.requirements.keySet()) {
-                        has_all_materials *= hasReq.get(req);
+                    for (String req : material.ingredients.keySet()) {
+                        has_all_materials *= hasAllRequiredMaterials.get(req);
                     }
                     material_continue_work = material.shouldStart ^ 1 | material_already_started | has_all_materials;
                 } else {
@@ -81,13 +81,13 @@ public class OfflineSimulator {
 
                 // spending
                 int a = (has_all_materials & material_already_started) ^ 1;
-                for (String req : material.requirements.keySet()) {
-                    a *= hasReq.get(req);
+                for (String req : material.ingredients.keySet()) {
+                    a *= hasAllRequiredMaterials.get(req);
                 }
 
-                for (String req : material.requirements.keySet()) {
+                for (String req : material.ingredients.keySet()) {
                     if (material.productionTime != -1) {
-                        float used = a * material.requirements.get(req);
+                        float used = a * material.ingredients.get(req);
                         if (used > 0) {
                             for (Material material1 : materials) {
                                 String key = req.split("_")[0];
@@ -106,10 +106,11 @@ public class OfflineSimulator {
             System.out.println();
         }
 
+        System.out.println("----------------------------------------------------");
         // final print/output, maybe add to the warehouse
-//        for (Material material : materials) {
-//            System.out.print(String.format("%.2f", material.initialAmount) + "\t");
-//        }
+        for (Material material : materials) {
+            System.out.print(String.format("%.2f", material.initialAmount) + "\t");
+        }
     }
 
     private static int H(float v) {

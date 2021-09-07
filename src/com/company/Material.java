@@ -25,15 +25,15 @@ public class Material {
     float initialAmount;
     float productionTime;
     float startProductionTime = 0;
-    Map<String, Float> requirements = new HashMap<>();
+    Map<String, Float> ingredients = new HashMap<>();
     Type type;
     int shouldStart = 1;
     private String name;
 
-    public Material(float initialAmount, float productionTime, Map<String, Float> requirements) {
+    public Material(float initialAmount, float productionTime, Map<String, Float> ingredients) {
         this.initialAmount = initialAmount;
         this.productionTime = productionTime;
-        this.requirements = requirements;
+        this.ingredients = ingredients;
     }
 
     public void setName(String name) {
@@ -54,7 +54,7 @@ public class Material {
     }
 
     public void addMaterialToRecipe(Material material, float amount) {
-        requirements.put(material.getName().split("_")[0], amount);
+        ingredients.put(material.getName().split("_")[0], amount);
     }
 
     public void setInitialAmount(float initialAmount) {
@@ -69,8 +69,8 @@ public class Material {
         this.startProductionTime = startProductionTime;
     }
 
-    public void setRequirements(Map<String, Float> requirements) {
-        this.requirements = requirements;
+    public void setIngredients(Map<String, Float> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public void setShouldStart(int shouldStart) {

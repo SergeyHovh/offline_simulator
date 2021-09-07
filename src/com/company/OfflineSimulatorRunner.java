@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class OfflineSimulatorRunner {
     public static void main(String[] args) {
-        ArrayList<Material> allMaterials = new ArrayList<>();
+        ArrayList<Material> snapshot = new ArrayList<>();
 
         Material iron = new Material(0, 1f);
         iron.setName("iron");
@@ -29,7 +29,7 @@ public class OfflineSimulatorRunner {
         copper.setName("copper");
         copper.setType(Material.Type.ORE);
 
-        Material copperBar = new Material(10, 60);
+        Material copperBar = new Material(0, 8);
         copperBar.setName("copper-bar");
         copperBar.addMaterialToRecipe(copper, 5);
         copperBar.setType(Material.Type.SMELT);
@@ -41,15 +41,15 @@ public class OfflineSimulatorRunner {
         plate.setType(Material.Type.CRAFT);
 
 
-        allMaterials.add(iron);
-        allMaterials.add(ironBar);
-        allMaterials.add(ironBar2);
-        allMaterials.add(ironBolt);
-        allMaterials.add(copper);
-        allMaterials.add(copperBar);
-        allMaterials.add(plate);
+        snapshot.add(iron);
+        snapshot.add(ironBar);
+        snapshot.add(ironBar2);
+        snapshot.add(ironBolt);
+        snapshot.add(copper);
+        snapshot.add(copperBar);
+        snapshot.add(plate);
 
-        OfflineSimulator simulator = new OfflineSimulator(120, allMaterials);
+        OfflineSimulator simulator = new OfflineSimulator(120, snapshot);
 //        simulator.addBooster(new Booster(Material.Type.ORE, 2, 30));
 //        simulator.addBooster(new Booster(Material.Type.SMELT, 2, 30));
 //        simulator.addBooster(new Booster(Material.Type.CRAFT, 2, 30));
