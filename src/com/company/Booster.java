@@ -28,7 +28,7 @@ public class Booster {
     }
 
     public int getDuration() {
-        return duration;
+        return duration; 
     }
 
     public void setDuration(int duration) {
