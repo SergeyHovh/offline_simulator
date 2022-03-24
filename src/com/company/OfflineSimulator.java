@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class OfflineSimulator {
-    private final int offlineTime;
-    private ArrayList<Material> materials;
+    private final ArrayList<Material> materials;
+    private final HashMap<String, Float> cumulativeAmounts;
 
-    private ArrayList<Booster> boosters = new ArrayList<>();
+    private final ArrayList<Booster> boosters = new ArrayList<>();
 
-    public OfflineSimulator(int offlineTime, ArrayList<Material> materials) {
-        this.offlineTime = offlineTime;
+    public OfflineSimulator(ArrayList<Material> materials) {
         this.materials = materials;
+        cumulativeAmounts = new HashMap<>();
+        for (Material material : materials) {
+            String key = material.getName().split("_")[0];
+            cumulativeAmounts.put(key, cumulativeAmounts.getOrDefault(key, 0f) + material.initialAmount);
+        }
     }
 
     public void addBooster(Booster booster) {
@@ -19,10 +23,9 @@ public class OfflineSimulator {
     }
 
     // magic
-    public void simulate() {
+    public int findRequiredTimeForQuestComplete(int offlineTime, String materialName, int amount) {
         for (int t = 0; t < offlineTime; t++) {
             for (Material material : materials) {
-                System.out.print(String.format("%.2f", material.initialAmount) + "\t");
 
                 for (Booster booster : boosters) {
                     if (booster.getType() == material.getType()) {
@@ -51,7 +54,7 @@ public class OfflineSimulator {
                 int has_all_materials = 1;
                 int material_already_started = 0;
 
-                // if has requirements, not an ore
+                // if it has requirements, not an ore
                 if (material.ingredients.size() > 0) {
                     if (material.initialAmount % 1 > 0.0001 && material.initialAmount % 1 < 0.9999) {
                         material_already_started = 1;
@@ -77,6 +80,13 @@ public class OfflineSimulator {
                 if (material.productionTime != -1) { // if producing
                     float produced = (material.getType().getMult() / material.productionTime) * material_continue_work;
                     material.initialAmount += produced;
+                    String key = material.getName().split("_")[0];
+                    cumulativeAmounts.put(key, cumulativeAmounts.get(key) + produced);
+                    if (key.equals(materialName)) {
+                        if (cumulativeAmounts.get(key) >= amount) {
+                            return t + 1;
+                        }
+                    }
                 }
 
                 // spending
@@ -103,17 +113,15 @@ public class OfflineSimulator {
                 }
                 material.shouldStart *= (has_all_materials & material_already_started) ^ 1;
             }
-            System.out.println();
         }
-
-        System.out.println("----------------------------------------------------");
-        // final print/output, maybe add to the warehouse
-        for (Material material : materials) {
-            System.out.print(String.format("%.2f", material.initialAmount) + "\t");
-        }
+        return offlineTime;
     }
 
-    private static int H(float v) {
+    private int H(float v) {
         return v >= 0 ? 1 : 0;
+    }
+
+    public void printCumulativeAmounts() {
+        System.out.println(cumulativeAmounts);
     }
 }

@@ -6,16 +6,16 @@ public class OfflineSimulatorRunner {
     public static void main(String[] args) {
         ArrayList<Material> snapshot = new ArrayList<>();
 
-        Material iron = new Material(0, 1f);
+        Material iron = new Material(150, 1f);
         iron.setName("iron");
         iron.setType(Material.Type.ORE);
 
-        Material ironBar = new Material(0, 15);
+        Material ironBar = new Material(20, 15);
         ironBar.setName("iron-bar_1");
         ironBar.addMaterialToRecipe(iron, 5);
         ironBar.setType(Material.Type.SMELT);
 
-        Material ironBar2 = new Material(0, 8);
+        Material ironBar2 = new Material(5, 8);
         ironBar2.setName("iron-bar_2");
         ironBar2.addMaterialToRecipe(iron, 5);
         ironBar2.setType(Material.Type.SMELT);
@@ -49,11 +49,12 @@ public class OfflineSimulatorRunner {
         snapshot.add(copperBar);
         snapshot.add(plate);
 
-        OfflineSimulator simulator = new OfflineSimulator(120, snapshot);
-//        simulator.addBooster(new Booster(Material.Type.ORE, 2, 30));
+        OfflineSimulator simulator = new OfflineSimulator(snapshot);
+//        simulator.addBooster(new Booster(Material.Type.ORE, 4, 30));
 //        simulator.addBooster(new Booster(Material.Type.SMELT, 2, 30));
 //        simulator.addBooster(new Booster(Material.Type.CRAFT, 2, 30));
-        simulator.simulate();
-
+        System.out.println(simulator.findRequiredTimeForQuestComplete(3600, "iron-bar", 50));
+        System.out.println("=========");
+        simulator.printCumulativeAmounts();
     }
 }
